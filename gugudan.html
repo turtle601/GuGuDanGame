@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>구구단 만들기</title>
+</head>
+<body>
+    <h1>간단한 구구단 만들기</h1>
+    <div id = "root"></div>
+
+    <script type = "text/babel">
+
+        function Problem(props){
+            const list = new Array(4).fill(0).map((val) => {
+                let a = Math.floor(1 + Math.random() * 9);
+                let b = Math.floor(1 + Math.random() * 9);
+                return a * b
+            })
+
+            list.push(props.state.first * props.state.second);
+            
+            // 배열 c suffle함수 구현
+            list.sort(() => Math.random() - 0.5);
+
+            return (
+                <div>
+                    {
+                        list.map((val, idx) => {
+                            return (
+                                <p key = {idx}> {idx + 1}. {val} </p>
+                            )
+                        })
+                    } 
+                </div>
+            )
+        }
+        
+        class MulTable extends React.Component {
+            constructor(props){
+                super(props);
+                this.state = {
+
+                    // 문제 변수
+                    first : Math.floor(1 + Math.random() * 9),
+                    second : Math.floor(1 + Math.random() * 9),
+                    // 무작위 배열 빈 거 []
+                    // 객관식 변수
+                    // 1. 배열 무작위 순위 매기기
+                    // 2. 거기다가 정답 추가 
+                }
+            }
+
+            // 무작위 배열 함수 (정답은 뺀)
+
+            render(){
+                // 여기 안에서 this.setState 변수를 사용할 경우 오류 발생 => return 하는 곳에서만 써야 함
+                // 무작위 배열 함수 실행 (정답 추가 해서)
+                // setState을 통해 무작위 배열 생성 완료
+                // this.setState({ randomList : list });
+
+                return ( 
+                    <>  
+                        {
+                            // 문제 예) 2 * 2?
+                            // checkbox 다섯 개
+                            // 1. 
+                            // 2.
+                            // 3. 
+                            // 4.
+                            // 5.
+
+                            // 정답 확인 => 정답!! = 해답 or 땡 = 해답
+                            
+                        }
+                        <div value = {this.random} > {this.state.first} X {this.state.second} ? </div>
+                        <Problem state = {this.state}/>
+                    </>
+                )
+            }
+        }
+    </script>
+    <script type = "text/babel">
+        ReactDOM.render(<MulTable></MulTable>, document.querySelector('#root'));
+    </script>    
+</body>
+</html>
