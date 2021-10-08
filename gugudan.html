@@ -14,6 +14,8 @@
     <script type = "text/babel">
 
         function Problem(props){
+
+
             const list = new Array(4).fill(0).map((val) => {
                 let a = Math.floor(1 + Math.random() * 9);
                 let b = Math.floor(1 + Math.random() * 9);
@@ -26,15 +28,37 @@
             list.sort(() => Math.random() - 0.5);
 
             return (
-                <div>
+                <form onSubmit = {(e) => {
+                    e.preventDefault();
+                    console.log(props.state.result);
+                }}>
                     {
                         list.map((val, idx) => {
                             return (
-                                <p key = {idx}> {idx + 1}. {val} </p>
+                                <div>
+                                    <input type = "checkbox" id = {idx} value = {val} onClick = {
+                                        (e) => {
+                                            if (e.target.checked){
+                                                const resultCopy = new Set(...props.state.result);
+                                                resultCopy.add(val);
+                                                props.setState({ result : resultCopy });
+
+                                            } else if (!e.target.checked && props.state.result.has(val)){
+                                                const resultCopy = new Set(...props.state.result);
+                                                resultCopy.delete(val);
+                                                props.setState({ result : resultCopy });
+                                            }
+                                        }   
+                                    }
+                                    
+                                    />
+                                    <label key = {idx}> {idx + 1}번 {val} </label>
+                                </div>
                             )
                         })
                     } 
-                </div>
+                    <button> 정답 입력 </button>
+                </form>
             )
         }
         
@@ -46,12 +70,16 @@
                     // 문제 변수
                     first : Math.floor(1 + Math.random() * 9),
                     second : Math.floor(1 + Math.random() * 9),
+                    result : new Set(),
                     // 무작위 배열 빈 거 []
                     // 객관식 변수
                     // 1. 배열 무작위 순위 매기기
                     // 2. 거기다가 정답 추가 
                 }
             }
+
+     
+
 
             // 무작위 배열 함수 (정답은 뺀)
 
@@ -76,7 +104,7 @@
                             
                         }
                         <div value = {this.random} > {this.state.first} X {this.state.second} ? </div>
-                        <Problem state = {this.state}/>
+                        <Problem state = {this.state} />
                     </>
                 )
             }
