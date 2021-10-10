@@ -17,11 +17,9 @@
             constructor(props){
                 super(props);
                 this.state = {
-                    // 문제 변수
+
                     first : Math.floor(1 + Math.random() * 9),
                     second : Math.floor(1 + Math.random() * 9),
-                    
-                    isRender : false,
 
                     result : [
                         {checking : false , data : 0},
@@ -32,10 +30,6 @@
                     ],
 
                     answer : ""
-                    // 무작위 배열 빈 거 []
-                    // 객관식 변수
-                    // 1. 배열 무작위 순위 매기기
-                    // 2. 거기다가 정답 추가 
                 }
                 
                 this.array = this.random();
@@ -53,46 +47,45 @@
                 return array;
             } 
 
+            onSubmit = (e) => {
+                e.preventDefault();
+                let count = 0;
+                let flag = false;
+                const correctAnswer = this.state.first * this.state.second;
+
+                this.state.result.forEach((val) => {
+                    if (val.checking === true) count += 1;
+                    if (val.checking === true && parseInt(val.data) === correctAnswer) flag = true;
+                })
+                
+                if (count === 1 && flag) this.setState( { answer : "정답" })
+                else this.setState({ answer : "오답" })
+            }
             // 무작위 배열 함수 (정답은 뺀)
 
-            render(){
-                // 여기 안에서 this.setState 변수를 사용할 경우 오류 발생 => return 하는 곳에서만 써야 함
-                // 무작위 배열 함수 실행 (정답 추가 해서)
-                // setState을 통해 무작위 배열 생성 완료        
+            onChange = (e) => {
+                let resultCopy = [...this.state.result];
+                let id = e.target.id;
+                let value = e.target.value
 
+                resultCopy[id].data = value;
+
+                if (e.target.checked) resultCopy[id].checking = true;
+                else resultCopy[id].checking = false;
+                
+                this.setState({result : resultCopy});
+            }
+
+            render(){
                 return ( 
                     <>  
                         <div> {this.state.first} X {this.state.second} ? </div>
-                        <form onSubmit = {(e) => {
-                            e.preventDefault();
-                            let count = 0;
-                            let flag = false;
-                            this.state.result.forEach((val) => {
-                                if (val.checking === true) count += 1;
-                                if (val.checking === true && val.data === (this.state.first * this.state.second)) flag = true;
-                            })
-                            
-                            if (count === 1 && flag === true) this.setState( { answer : "정답" })
-                            else this.setState({ answer : "오답" })
-                        }}>
+                        <form onSubmit = {this.onSubmit}>
                             {
                                 this.array.map((val, idx) => {
                                     return (
                                         <div>
-                                            <input type = "checkbox" id = {idx} value = {val} onChange = {(e) => {
-                                                if (e.target.checked) {
-                                                    let resultCopy = [...this.state.result];
-                                                    resultCopy[idx].checking = true;
-                                                    resultCopy[idx].data = val;
-                                                    this.setState({result : resultCopy});
-                                                } else {
-                                                    let resultCopy = [...this.state.result];
-                                                    resultCopy[idx].checking = false;
-                                                    resultCopy[idx].data = val;
-                                                    this.setState({result : resultCopy});
-                                                }
-                                            }}
-                                            />
+                                            <input type = "checkbox" id = {idx} value = {val} onChange = {onChange}/>
                                             <label>{idx+1}번 {val}</label>
                                         </div>
                                     )
