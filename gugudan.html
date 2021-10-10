@@ -13,6 +13,24 @@
 
     <script type = "text/babel">
 
+        // 객관식 나타내는 컴포넌트
+        function Problem(props){
+            return (
+                <>
+                {
+                    props.array.map((val, idx) => {
+                        return (
+                            <div>
+                                <input type = "checkbox" id = {idx} value = {val} onChange = {props.onChange}/>
+                                <label>{idx+1}번 {val}</label>
+                            </div>
+                        )
+                    })
+                }    
+                </>
+            )
+        }
+
         class MulTable extends React.Component {
             constructor(props){
                 super(props);
@@ -29,10 +47,10 @@
                         {checking : false , data : 0}
                     ],
 
-                    answer : ""
+                    answer : "",
                 }
                 
-                this.array = this.random();
+                this.array = this.random(); // 객관식 문항 5개
             }
 
             random = () => {
@@ -48,10 +66,11 @@
             } 
 
             onSubmit = (e) => {
-                e.preventDefault();
                 let count = 0;
                 let flag = false;
                 const correctAnswer = this.state.first * this.state.second;
+
+                e.preventDefault();
 
                 this.state.result.forEach((val) => {
                     if (val.checking === true) count += 1;
@@ -61,7 +80,6 @@
                 if (count === 1 && flag) this.setState( { answer : "정답" })
                 else this.setState({ answer : "오답" })
             }
-            // 무작위 배열 함수 (정답은 뺀)
 
             onChange = (e) => {
                 let resultCopy = [...this.state.result];
@@ -79,18 +97,9 @@
             render(){
                 return ( 
                     <>  
-                        <div> {this.state.first} X {this.state.second} ? </div>
+                        <div> {this.state.first} X {this.state.second} ? (중복 입력 시 오답 처리) </div>
                         <form onSubmit = {this.onSubmit}>
-                            {
-                                this.array.map((val, idx) => {
-                                    return (
-                                        <div>
-                                            <input type = "checkbox" id = {idx} value = {val} onChange = {onChange}/>
-                                            <label>{idx+1}번 {val}</label>
-                                        </div>
-                                    )
-                                })
-                            }
+                            <Problem array = {this.array} onChange = {this.onChange} /> 
                             <div> {this.state.answer} </div>
                             <button>정답확인</button>
                         </form>
